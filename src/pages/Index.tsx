@@ -72,9 +72,9 @@ const Index = () => {
           <CardHeader className="text-center space-y-4 pb-8">
             <div className="flex justify-center">
               <img 
-                src="https://cdn.poehali.dev/files/6f2b9599-be4e-4d02-bc7b-41465f73e98f.png" 
+                src="https://cdn.poehali.dev/files/5674fcfc-3180-4337-8a33-929f67942c71.jpeg" 
                 alt="РосУниМед" 
-                className="w-32 h-32 object-contain opacity-20"
+                className="w-48 h-48 object-contain opacity-20"
               />
             </div>
             <div>
