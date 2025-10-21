@@ -162,7 +162,7 @@ const Index = () => {
                 src="https://cdn.poehali.dev/files/6f2b9599-be4e-4d02-bc7b-41465f73e98f.png" 
                 alt="РосУниМед" 
                 className="w-16 h-16 object-contain"
-              </div>
+              />
               <div>
                 <h1 className="text-2xl font-bold text-primary">РосУниМед</h1>
                 <p className="text-sm text-muted-foreground">Личный кабинет</p>
