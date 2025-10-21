@@ -74,7 +74,7 @@ const Index = () => {
               <img 
                 src="https://cdn.poehali.dev/files/5674fcfc-3180-4337-8a33-929f67942c71.jpeg" 
                 alt="РосУниМед" 
-                className="w-48 h-48 object-contain opacity-20"
+                className="w-48 h-48 object-contain opacity-40"
               />
             </div>
             <div>
