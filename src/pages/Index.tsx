@@ -4,6 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import Icon from '@/components/ui/icon';
 
 type Grade = {
@@ -37,7 +40,21 @@ const mockSchedule: Schedule[] = [
 ];
 
 const Index = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState('ЛД-21');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username) {
+      setUsernameError(true);
+      return;
+    }
+    setIsLoggedIn(true);
+  };
 
   const getGradeColor = (score: number) => {
     if (score === 5) return 'bg-green-100 text-green-800 border-green-200';
@@ -47,6 +64,93 @@ const Index = () => {
   };
 
   const averageGrade = (mockGrades.reduce((acc, g) => acc + g.score, 0) / mockGrades.length).toFixed(2);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-lg">
+          <CardHeader className="text-center space-y-4 pb-8">
+            <div className="flex justify-center">
+              <img 
+                src="https://cdn.poehali.dev/files/6f2b9599-be4e-4d02-bc7b-41465f73e98f.png" 
+                alt="РосУниМед" 
+                className="w-32 h-32 object-contain opacity-20"
+              />
+            </div>
+            <div>
+              <CardTitle className="text-2xl font-bold text-primary">Личный кабинет</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="username" className="text-base">
+                  Имя пользователя <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    setUsernameError(false);
+                  }}
+                  className={usernameError ? 'border-destructive' : ''}
+                  placeholder="Введите имя пользователя"
+                />
+                {usernameError && (
+                  <div className="flex items-center gap-2 text-destructive text-sm mt-2">
+                    <Icon name="AlertCircle" size={16} />
+                    <span>Необходимо заполнить «Имя пользователя».</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-base">
+                  Пароль <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Введите пароль"
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="remember" 
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                />
+                <label
+                  htmlFor="remember"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Запомнить меня
+                </label>
+              </div>
+
+              <Button type="submit" className="w-full py-6 text-base" size="lg">
+                Вход
+              </Button>
+
+              <div className="text-center space-y-1">
+                <p className="text-sm text-muted-foreground">
+                  Хотите подать документы для поступления?
+                </p>
+                <Button variant="link" className="text-primary p-0 h-auto">
+                  Зарегистрируйтесь.
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
