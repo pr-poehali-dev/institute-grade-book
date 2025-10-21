@@ -21,23 +21,23 @@ type Schedule = {
 };
 
 const mockGrades: Grade[] = [
-  { subject: 'Математический анализ', score: 5, date: '15.10.2025', type: 'Экзамен' },
-  { subject: 'Программирование', score: 4, date: '14.10.2025', type: 'Лабораторная' },
-  { subject: 'Физика', score: 5, date: '13.10.2025', type: 'Контрольная' },
-  { subject: 'Английский язык', score: 4, date: '12.10.2025', type: 'Тест' },
-  { subject: 'История', score: 5, date: '11.10.2025', type: 'Зачет' },
-  { subject: 'Алгоритмы', score: 5, date: '10.10.2025', type: 'Лабораторная' },
+  { subject: 'Анатомия', score: 5, date: '15.10.2025', type: 'Экзамен' },
+  { subject: 'Физиология', score: 4, date: '14.10.2025', type: 'Практика' },
+  { subject: 'Биохимия', score: 5, date: '13.10.2025', type: 'Контрольная' },
+  { subject: 'Фармакология', score: 4, date: '12.10.2025', type: 'Тест' },
+  { subject: 'Патология', score: 5, date: '11.10.2025', type: 'Зачет' },
+  { subject: 'Микробиология', score: 5, date: '10.10.2025', type: 'Практика' },
 ];
 
 const mockSchedule: Schedule[] = [
-  { time: '9:00 - 10:30', subject: 'Математический анализ', teacher: 'Иванов И.И.', room: '201' },
-  { time: '10:45 - 12:15', subject: 'Программирование', teacher: 'Петрова А.С.', room: '305' },
-  { time: '12:30 - 14:00', subject: 'Физика', teacher: 'Сидоров В.П.', room: '115' },
-  { time: '14:15 - 15:45', subject: 'Английский язык', teacher: 'Смирнова Е.А.', room: '402' },
+  { time: '9:00 - 10:30', subject: 'Анатомия', teacher: 'Иванов И.И.', room: '201' },
+  { time: '10:45 - 12:15', subject: 'Физиология', teacher: 'Петрова А.С.', room: '305' },
+  { time: '12:30 - 14:00', subject: 'Биохимия', teacher: 'Сидоров В.П.', room: '115' },
+  { time: '14:15 - 15:45', subject: 'Клиническая практика', teacher: 'Смирнова Е.А.', room: '402' },
 ];
 
 const Index = () => {
-  const [selectedGroup, setSelectedGroup] = useState('ИВТ-21');
+  const [selectedGroup, setSelectedGroup] = useState('ЛД-21');
 
   const getGradeColor = (score: number) => {
     if (score === 5) return 'bg-green-100 text-green-800 border-green-200';
@@ -49,17 +49,19 @@ const Index = () => {
   const averageGrade = (mockGrades.reduce((acc, g) => acc + g.score, 0) / mockGrades.length).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <header className="bg-white shadow-sm border-b border-slate-200">
+    <div className="min-h-screen bg-background">
+      <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 animate-fade-in">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
-                <Icon name="GraduationCap" size={28} className="text-white" />
+              <img 
+                src="https://cdn.poehali.dev/files/6f2b9599-be4e-4d02-bc7b-41465f73e98f.png" 
+                alt="РосУниМед" 
+                className="w-16 h-16 object-contain"
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-slate-800">Институт Технологий</h1>
-                <p className="text-sm text-muted-foreground">Образовательная платформа</p>
+                <h1 className="text-2xl font-bold text-primary">РосУниМед</h1>
+                <p className="text-sm text-muted-foreground">Личный кабинет</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -67,8 +69,8 @@ const Index = () => {
                 <Icon name="Bell" size={20} />
               </Button>
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-secondary to-primary rounded-full flex items-center justify-center">
-                  <Icon name="User" size={20} className="text-white" />
+                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                  <Icon name="User" size={20} className="text-primary-foreground" />
                 </div>
                 <div className="hidden md:block">
                   <p className="text-sm font-medium">Студент</p>
@@ -140,28 +142,28 @@ const Index = () => {
             <Card className="animate-scale-in">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Icon name="Sparkles" className="text-primary" />
-                  Добро пожаловать в Институт Технологий
+                  <Icon name="Stethoscope" className="text-primary" />
+                  Добро пожаловать в РосУниМед
                 </CardTitle>
                 <CardDescription>
-                  Современная образовательная платформа для студентов и преподавателей
+                  Личный кабинет студента медицинского университета
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-slate-700 leading-relaxed">
-                  Наша платформа предоставляет удобный доступ к электронному дневнику, расписанию занятий 
-                  и всей необходимой информации для успешного обучения. Следите за своими оценками, 
-                  планируйте учебное время и будьте в курсе всех событий института.
+                <p className="text-foreground leading-relaxed">
+                  Личный кабинет предоставляет доступ к электронному дневнику, расписанию занятий 
+                  и всей необходимой информации для успешного обучения. Отслеживайте свою успеваемость, 
+                  планируйте время и будьте в курсе событий университета.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                  <div className="flex items-start gap-3 p-4 bg-card border rounded-xl">
                     <Icon name="CheckCircle" className="text-primary mt-0.5" size={20} />
                     <div>
                       <p className="font-medium text-sm">Онлайн дневник</p>
                       <p className="text-xs text-muted-foreground">Все оценки в одном месте</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
+                  <div className="flex items-start gap-3 p-4 bg-card border rounded-xl">
                     <Icon name="CheckCircle" className="text-secondary mt-0.5" size={20} />
                     <div>
                       <p className="font-medium text-sm">Расписание</p>
@@ -194,10 +196,10 @@ const Index = () => {
                   {mockGrades.map((grade, index) => (
                     <div
                       key={index}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-lg hover:shadow-md transition-all hover:scale-[1.02]"
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card border rounded-xl hover:shadow-md transition-all"
                     >
                       <div className="flex-1 mb-3 sm:mb-0">
-                        <h3 className="font-semibold text-slate-800">{grade.subject}</h3>
+                        <h3 className="font-semibold text-foreground">{grade.subject}</h3>
                         <div className="flex gap-2 mt-1 flex-wrap">
                           <Badge variant="secondary" className="text-xs">
                             {grade.type}
@@ -231,10 +233,10 @@ const Index = () => {
                       <SelectValue placeholder="Выберите группу" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ИВТ-21">ИВТ-21</SelectItem>
-                      <SelectItem value="ИВТ-22">ИВТ-22</SelectItem>
-                      <SelectItem value="ПИ-21">ПИ-21</SelectItem>
-                      <SelectItem value="ПИ-22">ПИ-22</SelectItem>
+                      <SelectItem value="ЛД-21">ЛД-21</SelectItem>
+                      <SelectItem value="ЛД-22">ЛД-22</SelectItem>
+                      <SelectItem value="СД-21">СД-21</SelectItem>
+                      <SelectItem value="ПД-21">ПД-21</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -244,14 +246,14 @@ const Index = () => {
                   {mockSchedule.map((lesson, index) => (
                     <div
                       key={index}
-                      className="flex gap-4 p-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-lg hover:shadow-md transition-all hover:scale-[1.01]"
+                      className="flex gap-4 p-4 bg-card border rounded-xl hover:shadow-md transition-all"
                     >
-                      <div className="flex flex-col items-center justify-center bg-white rounded-lg px-4 py-2 min-w-[100px] shadow-sm">
+                      <div className="flex flex-col items-center justify-center bg-primary/5 rounded-lg px-4 py-2 min-w-[100px] border">
                         <Icon name="Clock" size={20} className="text-primary mb-1" />
                         <p className="text-xs font-medium text-center">{lesson.time}</p>
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-slate-800 mb-1">{lesson.subject}</h3>
+                        <h3 className="font-semibold text-foreground mb-1">{lesson.subject}</h3>
                         <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Icon name="User" size={14} />
@@ -298,14 +300,14 @@ const Index = () => {
                     <Icon name="Mail" className="text-primary mt-1" size={20} />
                     <div>
                       <p className="font-medium">Email</p>
-                      <p className="text-sm text-muted-foreground">info@institute.edu</p>
+                      <p className="text-sm text-muted-foreground">info@rosunimed.ru</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Icon name="Globe" className="text-primary mt-1" size={20} />
                     <div>
                       <p className="font-medium">Веб-сайт</p>
-                      <p className="text-sm text-muted-foreground">www.institute.edu</p>
+                      <p className="text-sm text-muted-foreground">www.rosunimed.ru</p>
                     </div>
                   </div>
                 </CardContent>
@@ -319,19 +321,19 @@ const Index = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                     <span className="font-medium">Понедельник - Пятница</span>
                     <span className="text-sm text-muted-foreground">9:00 - 18:00</span>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                     <span className="font-medium">Суббота</span>
                     <span className="text-sm text-muted-foreground">10:00 - 15:00</span>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                     <span className="font-medium">Воскресенье</span>
                     <span className="text-sm text-muted-foreground">Выходной</span>
                   </div>
-                  <div className="mt-4 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg">
+                  <div className="mt-4 p-4 bg-primary/5 border rounded-xl">
                     <p className="text-sm font-medium mb-2 flex items-center gap-2">
                       <Icon name="Info" size={16} className="text-primary" />
                       Деканат
@@ -351,7 +353,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2025 Институт Технологий. Все права защищены.
+              © 2025 РосУниМед. Все права защищены.
             </p>
             <div className="flex gap-4">
               <Button variant="ghost" size="sm">
