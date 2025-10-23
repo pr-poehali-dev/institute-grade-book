@@ -368,67 +368,6 @@ const Index = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="old-home" className="space-y-6 animate-fade-in">
-            <div className="grid gap-6 md:grid-cols-3">
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Всего оценок</CardTitle>
-                  <Icon name="Award" className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-secondary">{mockSubjects.reduce((acc, s) => acc + s.grades.length, 0)}</div>
-                  <p className="text-xs text-muted-foreground mt-1">В электронном дневнике</p>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Занятий сегодня</CardTitle>
-                  <Icon name="Clock" className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-accent">{mockSchedule.length}</div>
-                  <p className="text-xs text-muted-foreground mt-1">По расписанию</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Icon name="Stethoscope" className="text-primary" />
-                  Добро пожаловать в РосУниМед
-                </CardTitle>
-                <CardDescription>
-                  Личный кабинет студента медицинского университета
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-foreground leading-relaxed">
-                  Личный кабинет предоставляет доступ к электронному дневнику, расписанию занятий 
-                  и всей необходимой информации для успешного обучения. Отслеживайте свою успеваемость, 
-                  планируйте время и будьте в курсе событий университета.
-                </p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="flex items-start gap-3 p-4 bg-card border rounded-xl">
-                    <Icon name="CheckCircle" className="text-primary mt-0.5" size={20} />
-                    <div>
-                      <p className="font-medium text-sm">Онлайн дневник</p>
-                      <p className="text-xs text-muted-foreground">Все оценки в одном месте</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-4 bg-card border rounded-xl">
-                    <Icon name="CheckCircle" className="text-secondary mt-0.5" size={20} />
-                    <div>
-                      <p className="font-medium text-sm">Расписание</p>
-                      <p className="text-xs text-muted-foreground">Актуальное расписание занятий</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           <TabsContent value="diary" className="space-y-6 animate-fade-in">
             {!selectedSubject ? (
               <Card>
@@ -549,61 +488,6 @@ const Index = () => {
                 </CardContent>
               </Card>
             )}
-          </TabsContent>
-
-          <TabsContent value="old-schedule" className="space-y-6 animate-fade-in">
-            <Card>
-              <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Icon name="Calendar" className="text-primary" />
-                      Расписание занятий
-                    </CardTitle>
-                    <CardDescription>Понедельник, 21 октября 2025</CardDescription>
-                  </div>
-                  <Select value={selectedGroup} onValueChange={setSelectedGroup}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Выберите группу" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ЛД-21">ЛД-21</SelectItem>
-                      <SelectItem value="ЛД-22">ЛД-22</SelectItem>
-                      <SelectItem value="СД-21">СД-21</SelectItem>
-                      <SelectItem value="ПД-21">ПД-21</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {mockSchedule.map((lesson, index) => (
-                    <div
-                      key={index}
-                      className="flex gap-4 p-4 bg-card border rounded-xl hover:shadow-md transition-all"
-                    >
-                      <div className="flex flex-col items-center justify-center bg-primary/5 rounded-lg px-4 py-2 min-w-[100px] border">
-                        <Icon name="Clock" size={20} className="text-primary mb-1" />
-                        <p className="text-xs font-medium text-center">{lesson.time}</p>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-foreground mb-1">{lesson.subject}</h3>
-                        <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Icon name="User" size={14} />
-                            {lesson.teacher}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Icon name="MapPin" size={14} />
-                            Аудитория {lesson.room}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
 
           <TabsContent value="contacts" className="space-y-6 animate-fade-in">
