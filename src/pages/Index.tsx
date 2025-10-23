@@ -16,6 +16,12 @@ type Grade = {
   type: string;
 };
 
+type SubjectDetails = {
+  subject: string;
+  grades: { score: number; date: string; type: string }[];
+  absences: { date: string; reason: string }[];
+};
+
 type Schedule = {
   time: string;
   subject: string;
@@ -23,17 +29,89 @@ type Schedule = {
   room: string;
 };
 
-const mockGrades: Grade[] = [
-  { subject: 'История медицины', score: 5, date: '15.10.2025', type: 'Зачет' },
-  { subject: 'Микробиология', score: 4, date: '14.10.2025', type: 'Практика' },
-  { subject: 'Педагогика', score: 5, date: '13.10.2025', type: 'Лекция-зал' },
-  { subject: 'ОЗП', score: 5, date: '12.10.2025', type: 'Практика' },
-  { subject: 'Профилактика', score: 4, date: '11.10.2025', type: 'Семинар' },
-  { subject: 'Патологическая анатомия', score: 5, date: '10.10.2025', type: 'Практика' },
-  { subject: 'Биологическая химия', score: 5, date: '09.10.2025', type: 'Аудитория' },
-  { subject: 'Нормальная физиология', score: 4, date: '08.10.2025', type: 'Аудитория' },
-  { subject: 'Биоэтика', score: 5, date: '07.10.2025', type: 'Лекция-зал' },
-  { subject: 'Патофизиология', score: 5, date: '06.10.2025', type: 'Аудитория' },
+const mockSubjects: SubjectDetails[] = [
+  { 
+    subject: 'История медицины', 
+    grades: [
+      { score: 5, date: '15.10.2025', type: 'Зачет' },
+      { score: 4, date: '08.10.2025', type: 'Контрольная' },
+    ],
+    absences: [
+      { date: '01.10.2025', reason: 'Болезнь' },
+    ]
+  },
+  { 
+    subject: 'Микробиология', 
+    grades: [
+      { score: 4, date: '14.10.2025', type: 'Практика' },
+      { score: 5, date: '07.10.2025', type: 'Лабораторная' },
+    ],
+    absences: []
+  },
+  { 
+    subject: 'Педагогика', 
+    grades: [
+      { score: 5, date: '13.10.2025', type: 'Лекция-зал' },
+    ],
+    absences: []
+  },
+  { 
+    subject: 'ОЗП', 
+    grades: [
+      { score: 5, date: '12.10.2025', type: 'Практика' },
+      { score: 5, date: '05.10.2025', type: 'Семинар' },
+    ],
+    absences: []
+  },
+  { 
+    subject: 'Профилактика', 
+    grades: [
+      { score: 4, date: '11.10.2025', type: 'Семинар' },
+    ],
+    absences: [
+      { date: '04.10.2025', reason: 'Уважительная' },
+    ]
+  },
+  { 
+    subject: 'Патологическая анатомия', 
+    grades: [
+      { score: 5, date: '10.10.2025', type: 'Практика' },
+      { score: 4, date: '03.10.2025', type: 'Коллоквиум' },
+    ],
+    absences: []
+  },
+  { 
+    subject: 'Биологическая химия', 
+    grades: [
+      { score: 5, date: '09.10.2025', type: 'Аудитория' },
+    ],
+    absences: []
+  },
+  { 
+    subject: 'Нормальная физиология', 
+    grades: [
+      { score: 4, date: '08.10.2025', type: 'Аудитория' },
+      { score: 5, date: '01.10.2025', type: 'Тест' },
+    ],
+    absences: [
+      { date: '06.10.2025', reason: 'Болезнь' },
+    ]
+  },
+  { 
+    subject: 'Биоэтика', 
+    grades: [
+      { score: 5, date: '07.10.2025', type: 'Лекция-зал' },
+    ],
+    absences: []
+  },
+  { 
+    subject: 'Патофизиология', 
+    grades: [
+      { score: 5, date: '06.10.2025', type: 'Аудитория' },
+      { score: 4, date: '29.09.2025', type: 'Практика' },
+    ],
+    absences: []
+  },
 ];
 
 const mockSchedule: Schedule[] = [
@@ -52,6 +130,7 @@ const Index = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState('ЛД-21');
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +148,14 @@ const Index = () => {
     return 'bg-red-100 text-red-800 border-red-200';
   };
 
-  const averageGrade = (mockGrades.reduce((acc, g) => acc + g.score, 0) / mockGrades.length).toFixed(2);
+  const calculateSubjectAverage = (subject: SubjectDetails) => {
+    if (subject.grades.length === 0) return 0;
+    return (subject.grades.reduce((acc, g) => acc + g.score, 0) / subject.grades.length).toFixed(2);
+  };
+
+  const getSubjectDetails = (subjectName: string) => {
+    return mockSubjects.find(s => s.subject === subjectName);
+  };
 
   if (!isLoggedIn) {
     return (
@@ -226,22 +312,11 @@ const Index = () => {
             <div className="grid gap-6 md:grid-cols-3">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Средний балл</CardTitle>
-                  <Icon name="TrendingUp" className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-primary">{averageGrade}</div>
-                  <p className="text-xs text-muted-foreground mt-1">За текущий семестр</p>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Всего оценок</CardTitle>
                   <Icon name="Award" className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-secondary">{mockGrades.length}</div>
+                  <div className="text-3xl font-bold text-secondary">{mockSubjects.reduce((acc, s) => acc + s.grades.length, 0)}</div>
                   <p className="text-xs text-muted-foreground mt-1">В электронном дневнике</p>
                 </CardContent>
               </Card>
@@ -295,45 +370,125 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="diary" className="space-y-6 animate-fade-in">
-            <Card>
-              <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            {!selectedSubject ? (
+              <Card>
+                <CardHeader>
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Icon name="BookOpen" className="text-primary" />
                       Электронный дневник
                     </CardTitle>
-                    <CardDescription>Ваши оценки и успеваемость</CardDescription>
+                    <CardDescription>Выберите предмет для просмотра деталей</CardDescription>
                   </div>
-                  <Badge variant="outline" className="text-base px-4 py-2 w-fit">
-                    Средний балл: {averageGrade}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {mockGrades.map((grade, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card border rounded-xl hover:shadow-md transition-all"
-                    >
-                      <div className="flex-1 mb-3 sm:mb-0">
-                        <h3 className="font-semibold text-foreground">{grade.subject}</h3>
-                        <div className="flex gap-2 mt-1 flex-wrap">
-                          <Badge variant="secondary" className="text-xs">
-                            {grade.type}
-                          </Badge>
-                          <span className="text-sm text-muted-foreground">{grade.date}</span>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {mockSubjects.map((subject, index) => (
+                      <div
+                        key={index}
+                        onClick={() => setSelectedSubject(subject.subject)}
+                        className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card border rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-primary"
+                      >
+                        <div className="flex-1 mb-3 sm:mb-0">
+                          <h3 className="font-semibold text-foreground">{subject.subject}</h3>
+                          <div className="flex gap-2 mt-2 flex-wrap items-center">
+                            <Badge variant="secondary" className="text-xs">
+                              Оценок: {subject.grades.length}
+                            </Badge>
+                            {subject.absences.length > 0 && (
+                              <Badge variant="destructive" className="text-xs">
+                                Пропусков: {subject.absences.length}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-primary">
+                              {calculateSubjectAverage(subject)}
+                            </div>
+                            <div className="text-xs text-muted-foreground">средний</div>
+                          </div>
+                          <Icon name="ChevronRight" className="text-muted-foreground" size={20} />
                         </div>
                       </div>
-                      <Badge className={`${getGradeColor(grade.score)} text-xl font-bold px-4 py-2 border`}>
-                        {grade.score}
-                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setSelectedSubject(null)}
+                      className="gap-2"
+                    >
+                      <Icon name="ArrowLeft" size={16} />
+                      Назад
+                    </Button>
+                  </div>
+                  <CardTitle className="flex items-center gap-2 mt-2">
+                    <Icon name="BookOpen" className="text-primary" />
+                    {selectedSubject}
+                  </CardTitle>
+                  <CardDescription>
+                    Средний балл: {calculateSubjectAverage(getSubjectDetails(selectedSubject)!)}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div>
+                    <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <Icon name="Award" size={20} className="text-primary" />
+                      Оценки
+                    </h3>
+                    <div className="space-y-2">
+                      {getSubjectDetails(selectedSubject)?.grades.map((grade, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 bg-card border rounded-lg"
+                        >
+                          <div>
+                            <Badge variant="secondary" className="text-xs mb-1">
+                              {grade.type}
+                            </Badge>
+                            <p className="text-sm text-muted-foreground">{grade.date}</p>
+                          </div>
+                          <Badge className={`${getGradeColor(grade.score)} text-xl font-bold px-4 py-2 border`}>
+                            {grade.score}
+                          </Badge>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  </div>
+                  
+                  {getSubjectDetails(selectedSubject)?.absences.length! > 0 && (
+                    <div>
+                      <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                        <Icon name="AlertCircle" size={20} className="text-destructive" />
+                        Пропуски
+                      </h3>
+                      <div className="space-y-2">
+                        {getSubjectDetails(selectedSubject)?.absences.map((absence, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-3 bg-card border border-destructive/20 rounded-lg"
+                          >
+                            <div>
+                              <p className="font-medium">{absence.date}</p>
+                              <p className="text-sm text-muted-foreground">{absence.reason}</p>
+                            </div>
+                            <Icon name="X" size={20} className="text-destructive" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
 
           <TabsContent value="schedule" className="space-y-6 animate-fade-in">
