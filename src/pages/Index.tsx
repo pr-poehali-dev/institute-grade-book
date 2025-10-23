@@ -24,19 +24,25 @@ type Schedule = {
 };
 
 const mockGrades: Grade[] = [
-  { subject: 'Анатомия', score: 5, date: '15.10.2025', type: 'Экзамен' },
-  { subject: 'Физиология', score: 4, date: '14.10.2025', type: 'Практика' },
-  { subject: 'Биохимия', score: 5, date: '13.10.2025', type: 'Контрольная' },
-  { subject: 'Фармакология', score: 4, date: '12.10.2025', type: 'Тест' },
-  { subject: 'Патология', score: 5, date: '11.10.2025', type: 'Зачет' },
-  { subject: 'Микробиология', score: 5, date: '10.10.2025', type: 'Практика' },
+  { subject: 'История медицины', score: 5, date: '15.10.2025', type: 'Зачет' },
+  { subject: 'Микробиология', score: 4, date: '14.10.2025', type: 'Практика' },
+  { subject: 'Педагогика', score: 5, date: '13.10.2025', type: 'Лекция-зал' },
+  { subject: 'ОЗП', score: 5, date: '12.10.2025', type: 'Практика' },
+  { subject: 'Профилактика', score: 4, date: '11.10.2025', type: 'Семинар' },
+  { subject: 'Патологическая анатомия', score: 5, date: '10.10.2025', type: 'Практика' },
+  { subject: 'Биологическая химия', score: 5, date: '09.10.2025', type: 'Аудитория' },
+  { subject: 'Нормальная физиология', score: 4, date: '08.10.2025', type: 'Аудитория' },
+  { subject: 'Биоэтика', score: 5, date: '07.10.2025', type: 'Лекция-зал' },
+  { subject: 'Патофизиология', score: 5, date: '06.10.2025', type: 'Аудитория' },
 ];
 
 const mockSchedule: Schedule[] = [
-  { time: '9:00 - 10:30', subject: 'Анатомия', teacher: 'Иванов И.И.', room: '201' },
-  { time: '10:45 - 12:15', subject: 'Физиология', teacher: 'Петрова А.С.', room: '305' },
-  { time: '12:30 - 14:00', subject: 'Биохимия', teacher: 'Сидоров В.П.', room: '115' },
-  { time: '14:15 - 15:45', subject: 'Клиническая практика', teacher: 'Смирнова Е.А.', room: '402' },
+  { time: '9:00 - 10:30', subject: 'История медицины', teacher: 'Д.4 каф.', room: 'Д.4' },
+  { time: '10:45 - 12:15', subject: 'Микробиология', teacher: '', room: 'Д.20 ауд.105,110,115,407,404' },
+  { time: '12:30 - 14:00', subject: 'Педагогика', teacher: '', room: 'Д.20 лекц.зал' },
+  { time: '14:15 - 15:45', subject: 'ОЗП', teacher: '', room: 'ОЗПП' },
+  { time: '16:00 - 17:30', subject: 'Профилактика', teacher: '', room: 'Профилактика' },
+  { time: '17:45 - 19:15', subject: 'Патологическая анатомия', teacher: '', room: 'Пат. анатомия' },
 ];
 
 const Index = () => {
