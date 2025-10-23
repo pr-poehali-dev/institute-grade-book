@@ -181,6 +181,15 @@ const Index = () => {
                   <p className="text-xs text-muted-foreground">{selectedGroup}</p>
                 </div>
               </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setIsLoggedIn(false)}
+                className="gap-2"
+              >
+                <Icon name="LogOut" size={16} />
+                <span className="hidden md:inline">Выход</span>
+              </Button>
             </div>
           </div>
         </div>
