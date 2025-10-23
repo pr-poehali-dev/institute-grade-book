@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +19,17 @@ type SubjectSchedule = {
   dayOfWeek: number;
   lessons: DayLesson[];
   average: string;
+};
+
+type SemesterExam = {
+  subject: string;
+  type: string;
+  grade: number;
+};
+
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
 };
 
 const generateScheduleData = (): SubjectSchedule[] => {
@@ -43,7 +54,7 @@ const generateScheduleData = (): SubjectSchedule[] => {
     { name: 'ПТС', day: 5 },
   ];
 
-  const grades = [3, 4, 4, 5, 5];
+  const grades = [3, 4, 4, 4, 5];
   
   return subjects.map((subj, subjectIndex) => {
     const lessons: DayLesson[] = [];
@@ -53,25 +64,29 @@ const generateScheduleData = (): SubjectSchedule[] => {
     const hasAbsence = (subjectIndex + 1) % 3 === 0;
     let absenceAdded = false;
     
+    let lessonIndex = 0;
     const currentDate = new Date(startDate);
     while (currentDate <= endDate) {
       if (currentDate.getDay() === subj.day) {
         if (currentDate <= today) {
-          const rand = Math.random();
+          const seed = subjectIndex * 1000 + lessonIndex;
+          const rand = seededRandom(seed);
           
           if (rand < 0.5) {
             lessons.push({ date: new Date(currentDate), value: '' });
           } else {
-            if (hasAbsence && !absenceAdded && Math.random() < 0.15) {
+            if (hasAbsence && !absenceAdded && seededRandom(seed + 1) < 0.15) {
               lessons.push({ date: new Date(currentDate), value: 'Н' });
               absenceAdded = true;
             } else {
-              const grade = grades[Math.floor(Math.random() * grades.length)];
+              const gradeRand = seededRandom(seed + 2);
+              const grade = grades[Math.floor(gradeRand * grades.length)];
               lessons.push({ date: new Date(currentDate), value: grade.toString() });
               gradeSum += grade;
               gradeCount++;
             }
           }
+          lessonIndex++;
         } else {
           lessons.push({ date: new Date(currentDate), value: '' });
         }
@@ -79,16 +94,39 @@ const generateScheduleData = (): SubjectSchedule[] => {
       currentDate.setDate(currentDate.getDate() + 1);
     }
     
-    const average = gradeCount > 0 ? (gradeSum / gradeCount).toFixed(2) : '0.00';
+    let average = gradeCount > 0 ? gradeSum / gradeCount : 0;
+    if (average < 3.5) average = 3.5 + seededRandom(subjectIndex) * 0.5;
+    if (average > 4.5) average = 4.0 + seededRandom(subjectIndex) * 0.5;
     
     return {
       subject: subj.name,
       dayOfWeek: subj.day,
       lessons,
-      average
+      average: average.toFixed(2)
     };
   });
 };
+
+const semester1Exams: SemesterExam[] = [
+  { subject: 'Химия', type: 'зачёт', grade: 4 },
+  { subject: 'Биология', type: 'зачёт', grade: 4 },
+  { subject: 'ЗОЖ', type: 'зачёт', grade: 5 },
+  { subject: 'Медицинская информатика', type: 'зачёт', grade: 5 },
+];
+
+const semester2Exams: SemesterExam[] = [
+  { subject: 'Гистология', type: 'экзамен', grade: 4 },
+  { subject: 'Анатомия', type: 'экзамен', grade: 4 },
+  { subject: 'Английский язык', type: 'зачёт', grade: 5 },
+  { subject: 'ПОС', type: 'зачёт', grade: 4 },
+  { subject: 'ПХС', type: 'зачёт', grade: 4 },
+  { subject: 'ПТС', type: 'зачёт', grade: 4 },
+  { subject: 'ОРГ', type: 'зачёт', grade: 5 },
+  { subject: 'Латинский язык', type: 'зачёт', grade: 4 },
+  { subject: 'Уход за больными', type: 'зачёт', grade: 4 },
+  { subject: 'Физика', type: 'зачёт', grade: 4 },
+  { subject: 'Физическая культура', type: 'зачёт', grade: 5 },
+];
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -98,10 +136,11 @@ const Index = () => {
   const [usernameError, setUsernameError] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState('ЛД-21');
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+  const [selectedSemester, setSelectedSemester] = useState<string>('current');
   const [applicationText, setApplicationText] = useState('');
   const [applicationType, setApplicationType] = useState<string>('academic');
 
-  const scheduleData = generateScheduleData();
+  const scheduleData = useMemo(() => generateScheduleData(), []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,10 +160,23 @@ const Index = () => {
     return 'bg-gray-50 text-gray-400 border-gray-200';
   };
 
+  const getGradeColor = (grade: number) => {
+    if (grade === 5) return 'bg-green-100 text-green-800 border-green-200';
+    if (grade === 4) return 'bg-blue-100 text-blue-800 border-blue-200';
+    if (grade === 3) return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    return 'bg-red-100 text-red-800 border-red-200';
+  };
+
   const formatDate = (date: Date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     return `${day}.${month}`;
+  };
+
+  const getSemesterExams = (semester: string): SemesterExam[] => {
+    if (semester === '1') return semester1Exams;
+    if (semester === '2') return semester2Exams;
+    return [];
   };
 
   if (!isLoggedIn) {
@@ -345,16 +397,38 @@ const Index = () => {
           <TabsContent value="diary" className="space-y-6 animate-fade-in">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Icon name="BookOpen" className="text-primary" />
                       Электронный дневник
                     </CardTitle>
-                    <CardDescription>Оценки и посещаемость по предметам</CardDescription>
+                    <CardDescription>
+                      {selectedSemester === 'current' ? 'Оценки и посещаемость по предметам' : `Результаты ${selectedSemester} семестра`}
+                    </CardDescription>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="group-select" className="text-sm">Группа:</Label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Label htmlFor="semester-select" className="text-sm">Семестр:</Label>
+                    <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+                      <SelectTrigger id="semester-select" className="w-40">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="current">Текущий</SelectItem>
+                        <SelectItem value="1">1 семестр</SelectItem>
+                        <SelectItem value="2">2 семестр</SelectItem>
+                        <SelectItem value="3">3 семестр</SelectItem>
+                        <SelectItem value="4">4 семестр</SelectItem>
+                        <SelectItem value="5">5 семестр</SelectItem>
+                        <SelectItem value="6">6 семестр</SelectItem>
+                        <SelectItem value="7">7 семестр</SelectItem>
+                        <SelectItem value="8">8 семестр</SelectItem>
+                        <SelectItem value="9">9 семестр</SelectItem>
+                        <SelectItem value="10">10 семестр</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    <Label htmlFor="group-select" className="text-sm ml-2">Группа:</Label>
                     <Select value={selectedGroup} onValueChange={setSelectedGroup}>
                       <SelectTrigger id="group-select" className="w-32">
                         <SelectValue />
@@ -369,25 +443,51 @@ const Index = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {scheduleData.map((subj) => (
-                    <div
-                      key={subj.subject}
-                      onClick={() => setSelectedSubject(subj.subject)}
-                      className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent transition-colors cursor-pointer"
-                    >
-                      <div className="flex-1">
-                        <h3 className="font-medium">{subj.subject}</h3>
+                {selectedSemester === 'current' ? (
+                  <div className="space-y-3">
+                    {scheduleData.map((subj) => (
+                      <div
+                        key={subj.subject}
+                        onClick={() => setSelectedSubject(subj.subject)}
+                        className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent transition-colors cursor-pointer"
+                      >
+                        <div className="flex-1">
+                          <h3 className="font-medium">{subj.subject}</h3>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Badge variant="outline" className="font-semibold">
+                            Средний: {subj.average}
+                          </Badge>
+                          <Icon name="ChevronRight" size={20} className="text-muted-foreground" />
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <Badge variant="outline" className="font-semibold">
-                          Средний: {subj.average}
-                        </Badge>
-                        <Icon name="ChevronRight" size={20} className="text-muted-foreground" />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {getSemesterExams(selectedSemester).length > 0 ? (
+                      getSemesterExams(selectedSemester).map((exam, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-4 rounded-lg border bg-card"
+                        >
+                          <div className="flex-1">
+                            <h3 className="font-medium">{exam.subject}</h3>
+                            <p className="text-sm text-muted-foreground capitalize">{exam.type}</p>
+                          </div>
+                          <Badge className={`${getGradeColor(exam.grade)} font-semibold text-lg px-4 py-1`}>
+                            {exam.grade}
+                          </Badge>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-12">
+                        <Icon name="FileQuestion" size={48} className="mx-auto text-muted-foreground mb-4" />
+                        <p className="text-muted-foreground">Данные за этот семестр пока не доступны</p>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
