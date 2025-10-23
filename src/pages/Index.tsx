@@ -134,7 +134,7 @@ const Index = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState('ЛД-21');
+  const [selectedGroup, setSelectedGroup] = useState('47');
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [selectedSemester, setSelectedSemester] = useState<string>('current');
   const [applicationText, setApplicationText] = useState('');
@@ -359,8 +359,8 @@ const Index = () => {
                   <Icon name="User" size={20} className="text-primary-foreground" />
                 </div>
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium">Студент</p>
-                  <p className="text-xs text-muted-foreground">{selectedGroup}</p>
+                  <p className="text-sm font-medium">Хазов Кирилл</p>
+                  <p className="text-xs text-muted-foreground">Группа {selectedGroup}</p>
                 </div>
               </div>
               <Button 
@@ -434,9 +434,7 @@ const Index = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ЛД-21">ЛД-21</SelectItem>
-                        <SelectItem value="ЛД-22">ЛД-22</SelectItem>
-                        <SelectItem value="ЛД-23">ЛД-23</SelectItem>
+                        <SelectItem value="47">47</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -544,21 +542,9 @@ const Index = () => {
                 <CardDescription>Ранее поданные заявления</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
-                    <div className="flex-1">
-                      <h3 className="font-medium">Справка о обучении</h3>
-                      <p className="text-sm text-muted-foreground">15.10.2025</p>
-                    </div>
-                    <Badge className="bg-green-100 text-green-800 border-green-200">Одобрено</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
-                    <div className="flex-1">
-                      <h3 className="font-medium">Академическая справка</h3>
-                      <p className="text-sm text-muted-foreground">08.10.2025</p>
-                    </div>
-                    <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">На рассмотрении</Badge>
-                  </div>
+                <div className="text-center py-12">
+                  <Icon name="FileX" size={48} className="mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">У вас пока нет поданных заявлений</p>
                 </div>
               </CardContent>
             </Card>
@@ -574,44 +560,89 @@ const Index = () => {
                 <CardDescription>Контактная информация деканата и администрации</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Icon name="Phone" className="text-primary" size={20} />
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <h3 className="font-semibold text-lg">Деканат</h3>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon name="MapPin" className="text-primary" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Адрес</h4>
+                        <p className="text-sm text-muted-foreground">г. Москва, ул. Вучетича, 9А</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium">Телефон деканата</h3>
-                      <p className="text-sm text-muted-foreground">+7 (495) 123-45-67</p>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon name="Phone" className="text-primary" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Телефон</h4>
+                        <p className="text-sm text-muted-foreground">+7 (495) 609-67-00</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon name="Mail" className="text-primary" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">E-mail</h4>
+                        <p className="text-sm text-muted-foreground">info@rosunimed.ru</p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Icon name="Mail" className="text-primary" size={20} />
+                  <div className="border-t pt-6 space-y-3">
+                    <h3 className="font-semibold text-lg">Приемная комиссия</h3>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon name="MapPin" className="text-primary" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Адрес</h4>
+                        <p className="text-sm text-muted-foreground">г. Москва, ул. Долгоруковская, д. 4, стр 3, 1 этаж, каб.101</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium">Email деканата</h3>
-                      <p className="text-sm text-muted-foreground">dekanat@rosunimed.ru</p>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon name="Phone" className="text-primary" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Телефон</h4>
+                        <p className="text-sm text-muted-foreground">+7 (499) 251 65 66</p>
+                        <p className="text-xs text-muted-foreground mt-1">(кроме выходных, праздничных и нерабочих дней)<br />с 10.00 до 16.00</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon name="Mail" className="text-primary" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">E-mail</h4>
+                        <p className="text-sm text-muted-foreground">priem_kom@rosunimed.ru</p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Icon name="MapPin" className="text-primary" size={20} />
+                  <div className="border-t pt-6 space-y-3">
+                    <h3 className="font-semibold text-lg">Главный корпус</h3>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon name="MapPin" className="text-primary" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Адрес</h4>
+                        <p className="text-sm text-muted-foreground">127006, г. Москва, ул. Долгоруковская дом 4</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium">Адрес</h3>
-                      <p className="text-sm text-muted-foreground">г. Москва, ул. Медицинская, д. 1</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Icon name="Clock" className="text-primary" size={20} />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Часы работы</h3>
-                      <p className="text-sm text-muted-foreground">Пн-Пт: 9:00 - 18:00</p>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Icon name="Phone" className="text-primary" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Справочная</h4>
+                        <p className="text-sm text-muted-foreground">+7 (495) 609-67-00</p>
+                      </div>
                     </div>
                   </div>
                 </div>
