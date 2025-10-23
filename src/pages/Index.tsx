@@ -9,24 +9,12 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import Icon from '@/components/ui/icon';
 
-type Grade = {
-  subject: string;
-  score: number;
-  date: string;
-  type: string;
-};
+
 
 type SubjectDetails = {
   subject: string;
   grades: { score: number; date: string; type: string }[];
   absences: { date: string; reason: string }[];
-};
-
-type Schedule = {
-  time: string;
-  subject: string;
-  teacher: string;
-  room: string;
 };
 
 const mockSubjects: SubjectDetails[] = [
@@ -114,15 +102,6 @@ const mockSubjects: SubjectDetails[] = [
   },
 ];
 
-const mockSchedule: Schedule[] = [
-  { time: '9:00 - 10:30', subject: 'История медицины', teacher: 'Д.4 каф.', room: 'Д.4' },
-  { time: '10:45 - 12:15', subject: 'Микробиология', teacher: '', room: 'Д.20 ауд.105,110,115,407,404' },
-  { time: '12:30 - 14:00', subject: 'Педагогика', teacher: '', room: 'Д.20 лекц.зал' },
-  { time: '14:15 - 15:45', subject: 'ОЗП', teacher: '', room: 'ОЗПП' },
-  { time: '16:00 - 17:30', subject: 'Профилактика', teacher: '', room: 'Профилактика' },
-  { time: '17:45 - 19:15', subject: 'Патологическая анатомия', teacher: '', room: 'Пат. анатомия' },
-];
-
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
@@ -131,6 +110,8 @@ const Index = () => {
   const [usernameError, setUsernameError] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState('ЛД-21');
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+  const [applicationText, setApplicationText] = useState('');
+  const [applicationType, setApplicationType] = useState<string>('academic');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -288,19 +269,15 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="home" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
-            <TabsTrigger value="home" className="gap-2">
-              <Icon name="Home" size={16} />
-              <span className="hidden sm:inline">Главная</span>
-            </TabsTrigger>
+        <Tabs defaultValue="diary" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
             <TabsTrigger value="diary" className="gap-2">
               <Icon name="BookOpen" size={16} />
               <span className="hidden sm:inline">Дневник</span>
             </TabsTrigger>
-            <TabsTrigger value="schedule" className="gap-2">
-              <Icon name="Calendar" size={16} />
-              <span className="hidden sm:inline">Расписание</span>
+            <TabsTrigger value="applications" className="gap-2">
+              <Icon name="FileText" size={16} />
+              <span className="hidden sm:inline">Заявления</span>
             </TabsTrigger>
             <TabsTrigger value="contacts" className="gap-2">
               <Icon name="Mail" size={16} />
@@ -308,7 +285,90 @@ const Index = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="home" className="space-y-6 animate-fade-in">
+          <TabsContent value="applications" className="space-y-6 animate-fade-in">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="FileText" className="text-primary" />
+                  Подать заявление
+                </CardTitle>
+                <CardDescription>Заполните форму для отправки заявления</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="applicationType">Тип заявления</Label>
+                  <Select value={applicationType} onValueChange={setApplicationType}>
+                    <SelectTrigger id="applicationType">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="academic">Академический отпуск</SelectItem>
+                      <SelectItem value="certificate">Справка-вызов</SelectItem>
+                      <SelectItem value="transfer">Перевод на другую группу</SelectItem>
+                      <SelectItem value="documents">Выдача документов</SelectItem>
+                      <SelectItem value="other">Другое</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="applicationText">Текст заявления</Label>
+                  <textarea
+                    id="applicationText"
+                    value={applicationText}
+                    onChange={(e) => setApplicationText(e.target.value)}
+                    placeholder="Опишите ваше обращение..."
+                    className="w-full min-h-[200px] p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+
+                <div className="bg-muted/50 p-4 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <Icon name="Info" size={20} className="text-primary mt-0.5" />
+                    <div className="text-sm text-muted-foreground">
+                      <p className="font-medium text-foreground mb-1">Важно:</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Заявление будет рассмотрено в течение 3 рабочих дней</li>
+                        <li>Ответ придёт на вашу университетскую почту</li>
+                        <li>Указывайте все необходимые детали в тексте заявления</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  disabled={!applicationText.trim()}
+                  onClick={() => {
+                    alert('Заявление успешно отправлено!');
+                    setApplicationText('');
+                  }}
+                >
+                  <Icon name="Send" size={16} className="mr-2" />
+                  Отправить заявление
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="Clock" className="text-primary" />
+                  История заявлений
+                </CardTitle>
+                <CardDescription>Ваши поданные заявления</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-muted-foreground">
+                  <Icon name="Inbox" size={48} className="mx-auto mb-3 opacity-50" />
+                  <p>У вас пока нет поданных заявлений</p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="old-home" className="space-y-6 animate-fade-in">
             <div className="grid gap-6 md:grid-cols-3">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -491,7 +551,7 @@ const Index = () => {
             )}
           </TabsContent>
 
-          <TabsContent value="schedule" className="space-y-6 animate-fade-in">
+          <TabsContent value="old-schedule" className="space-y-6 animate-fade-in">
             <Card>
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
